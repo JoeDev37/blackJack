@@ -46,20 +46,54 @@ if (!isNaN(fund)) {
       return deck;
     }
 
+    function deal<T>(deck: T[], count: number): T[] {
+      return deck.splice(-count, count);
+    }
     const decks: Card[] = [];
     for (const suit of suits) {
       for (const rank of ranks) {
-        decks.push({ suit, rank });
-        // decks.pop()
+        decks.push({ suit, rank});
       }
     }
 
-    const shuffled: Card[] = shuffledDeck(decks);
-    // console.log(shuffled);
-    const oneCard: Card | undefined = shuffled.pop();
-    if (oneCard) {
-      console.log(`Your hand: ${oneCard.rank}${oneCard.suit}`);
+    const shuffled: Card[] = shuffledDeck(decks, );
+    const hand: Card[] = deal(shuffled, 2)
+    if (hand.length === 2){
+      console.log(`Your hand: ${hand.map(c => `${c.rank}${c.suit}`).join(" ")} (total ${calculateHandValue(hand)})`)
     }
+
+    console.log("Dealer's hand: ")
+
+    // const dealer: Card[] = deal( shuffled, 1 )
+    // if (dealer.length === 2) {
+    //   console.log(`Dealer's hand: ${dealer.map( c => `${c.rank}${c.suit}`).join( "" )} (hidden)`)
+    // }
+
+    // Give a value for cards on hand
+
+    function calculateHandValue(hand: Card[]): number {
+      let score = 0;
+      let aceScore = 0;
+
+      for (const card of hand) {
+        if (card.rank === 'A') {
+          aceScore += 1;
+          score += 11
+        } else if (['J', 'Q', 'K'].includes(card.rank)) {
+          score += 10
+        } else  {
+          score += parseInt(card.rank, 10)
+        }
+      }
+
+
+      while (score > 21 && aceScore > 0) {
+        score -= 10;
+        aceScore -= 1;
+      }
+      return score
+    }
+  
   }
 } else {
   console.log("put only number");
