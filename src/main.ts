@@ -57,20 +57,20 @@ if (!isNaN(fund)) {
     }
 
     const shuffled: Card[] = shuffledDeck(decks, );
+
+    // player's hand
     const hand: Card[] = deal(shuffled, 2)
     if (hand.length === 2){
       console.log(`Your hand: ${hand.map(c => `${c.rank}${c.suit}`).join(" ")} (total ${calculateHandValue(hand)})`)
     }
 
-    console.log("Dealer's hand: ")
+    // dealer's hand
+    const dealerHand: Card[] = deal(shuffled, 2);
+    if (dealerHand.length === 2) {
+      console.log(`Dealer's hand: ${dealerHand.map(c => `${c.rank}${c.suit}`).join( "  " )} (total ${calculateHandValue(dealerHand)})`)
+    } // how to hide the second card??????
 
-    // const dealer: Card[] = deal( shuffled, 1 )
-    // if (dealer.length === 2) {
-    //   console.log(`Dealer's hand: ${dealer.map( c => `${c.rank}${c.suit}`).join( "" )} (hidden)`)
-    // }
-
-    // Give a value for cards on hand
-
+    // Give a value for cards
     function calculateHandValue(hand: Card[]): number {
       let score = 0;
       let aceScore = 0;
