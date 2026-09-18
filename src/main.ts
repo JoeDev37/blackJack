@@ -59,6 +59,20 @@ if (!isNaN(fund)) {
     const shuffled: Card[] = shuffledDeck(decks, );
 
     // player's hand
+    // const hand: Card[] = deal(shuffled, 2)
+    // if (hand.length === 2){
+    //   console.log(`Your hand: ${hand.map(c => `${c.rank}${c.suit}`).join(" ")} (total ${calculateHandValue(hand)})`)
+    // }
+
+    // dealer's hand
+    // const dealerHand: Card[] = deal(shuffled, 2);
+    // if (dealerHand.length === 2) {
+    //   console.log(`Dealer's hand: ${dealerHand.map(c => `${c.rank}${c.suit}`).join( "  " )} (total ${calculateHandValue(dealerHand)})`)
+    // } // how to hide the second card??????
+
+    function justPlay() {
+
+         // player's hand
     const hand: Card[] = deal(shuffled, 2)
     if (hand.length === 2){
       console.log(`Your hand: ${hand.map(c => `${c.rank}${c.suit}`).join(" ")} (total ${calculateHandValue(hand)})`)
@@ -69,6 +83,32 @@ if (!isNaN(fund)) {
     if (dealerHand.length === 2) {
       console.log(`Dealer's hand: ${dealerHand.map(c => `${c.rank}${c.suit}`).join( "  " )} (total ${calculateHandValue(dealerHand)})`)
     } // how to hide the second card??????
+      
+    }
+    justPlay();
+
+
+    // hit or stand action
+    // hit =  take another card
+    // stand = take no more card(keep the currnet card)
+
+    let hitStand: string = prompt('hit/stand ');
+
+    // if (hitStand === "hit") {
+    //   justPlay()
+    // }
+
+    while(hitStand === "hit") {
+      justPlay();
+
+      hitStand = prompt('hit/stand ')
+    }
+
+    if (hitStand === "stand") {
+      console.log('game ends here')
+    }
+    
+
 
     // Give a value for cards
     function calculateHandValue(hand: Card[]): number {
