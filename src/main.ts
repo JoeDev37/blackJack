@@ -59,7 +59,7 @@ if (!isNaN(fund)) {
     const hand: Card[] = deal(shuffled, 2);
     if (hand.length === 2) {
       console.log(
-        `Your hand: ${hand.map((c) => `${c.rank}${c.suit}`).join(" ")} (total ${calculateHandValue(hand)})`,
+        `→ Your hand: ${hand.map((c) => `${c.rank}${c.suit}`).join(" ")} (total ${calculateHandValue(hand)})`,
       );
     }
 
@@ -67,63 +67,92 @@ if (!isNaN(fund)) {
     const dealerHand: Card[] = deal(shuffled, 2);
     if (dealerHand.length === 2) {
       console.log(
-        `Dealer's hand: ${dealerHand.map((c) => `${c.rank}${c.suit}`).join("  ")} (total ${calculateHandValue(dealerHand)})`,
+        `→ Dealer's hand: ${dealerHand.map((c) => `${c.rank}${c.suit}`).join("  ")} (total ${calculateHandValue(dealerHand)})`,
       );
     } // how to hide the second card??????
 
-    let hitStand: string = prompt("hit/stand ");
+    let hitStand: string = prompt("hit/stand: ");
 
     while (hitStand === "hit") {
       const newCard: Card[] = deal(shuffled, 1);
       if (newCard[0]) {
         hand.push(newCard[0]);
         console.log(
-          `Your hand: ${hand.map((c) => `${c.rank}${c.suit}`).join(" ")} (total ${calculateHandValue(hand)})`,
+          `→ Your hand: ${hand.map((c) => `${c.rank}${c.suit}`).join(" ")} (total ${calculateHandValue(hand)})`,
         );
       }
       if (calculateHandValue(hand) >= 22) {
-        console.log("bust, Dealer won!");
-        console.log(`you left: $${fund - bet}`)
+        console.log("→ bust, Dealer won!");
+        console.log(`→ you left: $${fund - bet}`);
         // console.log('Dealer Won')
         break;
       } else if (calculateHandValue(hand) === 21) {
-        console.log("You won!!");
-        console.log(`your fund: $${fund + bet}`);
+        console.log("→ You won!!");
+        console.log(`→ your fund: $${fund + bet}`);
       }
-      hitStand = prompt("hit/stand ");
+      // ask if the player wants to continue
+      hitStand = prompt("hit/stand: ");
     }
 
     if (hitStand === "stand") {
-      // dealer hit one card. if dealer > player = lose, dealer < player = win
-      // Dealer has less than 17 → hit
-      // Dealer has 17 or more → stand
-      // Dealer goes over 21 → bust
-      while (hitStand === "stand") {
+      while (true) {
+        const dealerValue = calculateHandValue(dealerHand);
+
+        // Dealer busts
+        if (dealerValue > 21) {
+          console.log("→ Dealer busts, player won!");
+          console.log(`→ your fund: $${fund + bet}`);
+          break;
+        }
+
+        // Dealer stands on 17-21
+        if (dealerValue >= 17) {
+          console.log(
+            `→ Dealer stands: ${dealerHand
+              .map((c) => `${c.rank}${c.suit}`)
+              .join("  ")} (total ${dealerValue})`,
+          );
+          break;
+        }
+
+        // Dealer is 16 or less, so hit
         const newCard: Card[] = deal(shuffled, 1);
 
         if (newCard[0]) {
           dealerHand.push(newCard[0]);
-          console.log(
-            `Dealer's hand: ${dealerHand.map((c) => `${c.rank}${c.suit}`).join("  ")} (total ${calculateHandValue(dealerHand)})`,
-          );
-        }
 
-        if (calculateHandValue(dealerHand) <= 16) {
           console.log(
-            `Dealer's hand: ${dealerHand.map((c) => `${c.rank}${c.suit}`).join("  ")} (total ${calculateHandValue(dealerHand)})`,
+            `→ Dealer's hand: ${dealerHand
+              .map((c) => `${c.rank}${c.suit}`)
+              .join("  ")} (total ${calculateHandValue(dealerHand)})`,
           );
-          break;
-        } else if (calculateHandValue(dealerHand) >= 17) {
-          console.log(hitStand === "stand");
-          break;
-        } else if (calculateHandValue(dealerHand) === 21) {
-          console.log("Dealer won!!");
-          console.log(`your fund: $${fund - bet}`);
-        } else if (calculateHandValue(dealerHand) > 21) {
-          console.log("bust, player won");
-          console.log(`your fund: $${fund - bet}`);
-          break;
         }
+      }
+
+      // Compare final hands after dealer is finished
+      console.log(`→ ${compHands(hand, dealerHand)}`);
+    }
+
+    type gameResult = "player won!" | "dealer won!" | "tie.";
+
+    function compHands(pH: Card[], dH: Card[]): gameResult {
+      const playerScore = calculateHandValue(pH);
+      const dealerScore = calculateHandValue(dH);
+
+      if (playerScore > 21) {
+        return "dealer won!";
+      }
+
+      if (dealerScore > 21) {
+        return "player won!";
+      }
+
+      if (playerScore > dealerScore) {
+        return "player won!";
+      } else if (dealerScore > playerScore) {
+        return "dealer won!";
+      } else {
+        return "tie.";
       }
     }
 
@@ -151,5 +180,5 @@ if (!isNaN(fund)) {
     }
   }
 } else {
-  console.log("put only number");
+  console.log("put only number.");
 }
