@@ -55,25 +55,21 @@ if (!isNaN(fund)) {
 
     const shuffled: Card[] = shuffledDeck(decks);
 
-      // player's hand
-      const hand: Card[] = deal(shuffled, 2);
-      if (hand.length === 2) {
-        console.log(
-          `Your hand: ${hand.map((c) => `${c.rank}${c.suit}`).join(" ")} (total ${calculateHandValue(hand)})`,
-        );
-      }
+    // player's hand
+    const hand: Card[] = deal(shuffled, 2);
+    if (hand.length === 2) {
+      console.log(
+        `Your hand: ${hand.map((c) => `${c.rank}${c.suit}`).join(" ")} (total ${calculateHandValue(hand)})`,
+      );
+    }
 
-      // dealer's hand
-      const dealerHand: Card[] = deal(shuffled, 2);
-      if (dealerHand.length === 2) {
-        console.log(
-          `Dealer's hand: ${dealerHand.map((c) => `${c.rank}${c.suit}`).join("  ")} (total ${calculateHandValue(dealerHand)})`,
-        );
-      } // how to hide the second card??????
-
-    // hit or stand action
-    // hit =  take another card
-    // stand = take no more card(keep the currnet card)
+    // dealer's hand
+    const dealerHand: Card[] = deal(shuffled, 2);
+    if (dealerHand.length === 2) {
+      console.log(
+        `Dealer's hand: ${dealerHand.map((c) => `${c.rank}${c.suit}`).join("  ")} (total ${calculateHandValue(dealerHand)})`,
+      );
+    } // how to hide the second card??????
 
     let hitStand: string = prompt("hit/stand ");
 
@@ -86,10 +82,13 @@ if (!isNaN(fund)) {
         );
       }
       if (calculateHandValue(hand) >= 22) {
-        console.log("bust");
+        console.log("bust, Dealer won!");
+        console.log(`you left: $${fund - bet}`)
+        // console.log('Dealer Won')
         break;
       } else if (calculateHandValue(hand) === 21) {
-        console.log('You won!!');
+        console.log("You won!!");
+        console.log(`your fund: $${fund + bet}`);
       }
       hitStand = prompt("hit/stand ");
     }
@@ -100,35 +99,32 @@ if (!isNaN(fund)) {
       // Dealer has 17 or more → stand
       // Dealer goes over 21 → bust
       while (hitStand === "stand") {
-        const newCard: Card[] = deal(shuffled, 1)
+        const newCard: Card[] = deal(shuffled, 1);
 
         if (newCard[0]) {
-          dealerHand.push(newCard[0])
+          dealerHand.push(newCard[0]);
           console.log(
             `Dealer's hand: ${dealerHand.map((c) => `${c.rank}${c.suit}`).join("  ")} (total ${calculateHandValue(dealerHand)})`,
           );
         }
-        if (calculateHandValue(dealerHand) >= 17) {
-          // console.log("bust, player won!");
+
+        if (calculateHandValue(dealerHand) <= 16) {
+          console.log(
+            `Dealer's hand: ${dealerHand.map((c) => `${c.rank}${c.suit}`).join("  ")} (total ${calculateHandValue(dealerHand)})`,
+          );
+          break;
+        } else if (calculateHandValue(dealerHand) >= 17) {
           console.log(hitStand === "stand");
           break;
-        } else if (calculateHandValue(dealerHand) <= 16) {
-          console.log(
-            `Dealer's hand: ${dealerHand.map((c) => `${c.rank}${c.suit}`).join("  ")} (total ${calculateHandValue(dealerHand)})`,
-          );
-          break;
+        } else if (calculateHandValue(dealerHand) === 21) {
+          console.log("Dealer won!!");
+          console.log(`your fund: $${fund - bet}`);
         } else if (calculateHandValue(dealerHand) > 21) {
-          console.log('bust, player won');
+          console.log("bust, player won");
+          console.log(`your fund: $${fund - bet}`);
           break;
         }
-
-
-        // else if (calculateHandValue(dealerHand) <= 21 && calculateHandValue(dealerHand) > calculateHandValue(hand)) {
-        //   console.log('dealer won, player lost');
-        //   break;
-        // }
       }
-      // hitStand = prompt("hit/stand ");
     }
 
     // Give a value for cards
